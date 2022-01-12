@@ -7,23 +7,33 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
-@Slf4j
+
+
+
 @Controller
+@SessionAttributes("tacoOrder")
+@RequiredArgsConstructor
 public class OrderController {
+
+    private final TacoOrderRepository repository;
+
     @GetMapping("/orders/current")
     public String orderForm(Model model) {
-        model.addAttribute("tacoOrder", new TacoOrder());
         return "orderForm";
     }
     @PostMapping("/orders")
-    public String processOrder(@Valid TacoOrder order, Errors errors) {
+    public String processOrder(@Valid TacoOrder order, Errors errors, SessionStatus status) {
         if (errors.hasErrors()) {
             return "orderForm";
         }
-        log.info("Order submitted: " + order);
+        this.repository.save(order);
+        status.setComplete();
+        
         return "redirect:/";
     }
 }

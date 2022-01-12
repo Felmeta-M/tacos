@@ -18,6 +18,11 @@
         th:action="@{/orders}"
         th:object="${tacoOrder}"
       >
+      <ul class="list-group">
+        <li class="list-group-item" th:each="taco : ${tacoOrder.tacos}">
+          <span th:text="${taco.designName}">taco name</span>
+        </li>
+       </ul>
         <h3>Deliver my taco masterpieces to...</h3>
         <div>
           <label class="form-label" for="deliveryName">Name: </label>
